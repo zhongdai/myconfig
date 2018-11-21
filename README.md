@@ -1,2 +1,3 @@
-# myconfig
-backup all system configuration related 
+# My Workstation Configuration
+
+to be completed
