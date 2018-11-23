@@ -1,3 +1,5 @@
+!#usr/bin/zsh
+
 
 # create alias for git command
 git config --global alias.co checkout
