@@ -1,4 +1,4 @@
-#!/usr/bin/zsh
+#!/usr/local/bin/zsh
 
 
 # create alias for git command
@@ -8,7 +8,10 @@ git config --global alias.ci commit
 git config --global alias.st status
 git config --global alias.unstage 'reset HEAD --'
 git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
-#/usr/bin/zsh
+
+
+# install Vundle
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 # Link the config files to ~
 if [ -e ~/.vimrc ]; then
@@ -20,7 +23,10 @@ if [ -e ~/.vimrc ]; then
 		mv ~/.vimrc ~/.vimrc.backup
 	fi
 	echo "Create the new link file"
-	ln -s $(pwd)/.vimrc ~/.vimrc
+	ln -s $(pwd)/_vimrc ~/.vimrc
+else
+	echo "Create the new link file"
+	ln -s $(pwd)/_vimrc ~/.vimrc
 fi
 
 if [ -e ~/.tmux.conf ]; then
@@ -32,7 +38,10 @@ if [ -e ~/.tmux.conf ]; then
 		mv ~/.tmux.conf ~/.tmux.conf.backup
 	fi
 	echo "Create the new link file"
-	ln -s $(pwd)/.tmux.conf ~/.tmux.conf
+	ln -s $(pwd)/_tmux.conf ~/.tmux.conf
+else
+	echo "Create the new link file"
+	ln -s $(pwd)/_tmux.conf ~/.tumx.conf
 fi
 
 
@@ -41,10 +50,4 @@ fi
 if [ $(uname) = "Darwin" ]; then
 	# enable holding the key
 	defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-
-	# change save screenshot to folder
-	defaults write com.apple.screencapture location /Users/zhongdai/Pictures/Screenshots/
 fi
-
-
-
