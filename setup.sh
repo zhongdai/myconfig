@@ -41,7 +41,7 @@ if [ -e ~/.tmux.conf ]; then
 	ln -s $(pwd)/_tmux.conf ~/.tmux.conf
 else
 	echo "Create the new link file"
-	ln -s $(pwd)/_tmux.conf ~/.tumx.conf
+	ln -s $(pwd)/_tmux.conf ~/.tmux.conf
 fi
 
 
@@ -51,3 +51,5 @@ if [ $(uname) = "Darwin" ]; then
 	# enable holding the key
 	defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 fi
+
+# create the pip.conf

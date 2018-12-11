@@ -39,3 +39,4 @@ New remote url:
 `origin git@github-companyName:companyName/repoName`
 
 Use `git remote set-url` command.
+
