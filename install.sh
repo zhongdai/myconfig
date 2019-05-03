@@ -194,7 +194,8 @@ check_requirements () {
     success "Check Requirements: Oh My Zsh"
   else
     warn "Check Requirements: Oh My Zsh"
-    info "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)\""
+    info "Install oh-my-zsh"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
   fi
 
   # check vundle 
@@ -202,7 +203,8 @@ check_requirements () {
     success "Check Requirements: Vundle"
   else
     warn "Check Requirements: Vundle"
-    info "git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim"
+    info "Install Vundle"
+    git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
   fi
 
 }
@@ -288,8 +290,9 @@ config_tmux() {
 }
 
 config_zsh() {
-  info "Update zsh config"
-  success "Successfully update zsh config"
+  cp "$HOME/.myconfig/config/myconfig.zsh" "$HOME/.oh-my-zsh/custom"
+  source "$HOME/.zshrc"
+  success "Successfuly copied zsh custom file"
 }
 
 fetch_repo () {
@@ -321,6 +324,7 @@ main () {
       --install|-i)
         need_cmd 'git'
         need_cmd 'tmux'
+        check_requirements
         fetch_repo
         install_fonts
         config_zsh
@@ -341,6 +345,7 @@ main () {
   else
     need_cmd 'git'
     need_cmd 'tmux'
+    check_requirements
     fetch_repo
     install_fonts
     config_zsh
