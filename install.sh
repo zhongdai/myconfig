@@ -291,7 +291,7 @@ config_tmux() {
 
 config_zsh() {
   cp "$HOME/.myconfig/config/myconfig.zsh" "$HOME/.oh-my-zsh/custom"
-  source "$HOME/.zshrc"
+  msg "Please source ~/.zshrc to reflect the change"
   success "Successfuly copied zsh custom file"
 }
 
