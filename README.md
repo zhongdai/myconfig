@@ -1,3 +1,10 @@
-# My Workstation Configuration
+# Zhong's Config
 
-to be completed
+This is my personal config file repo, which includes the tools I need for Mac/Linux.
+
+
+## Installation
+
+```bash
+curl | bash 
+```
