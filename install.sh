@@ -139,6 +139,85 @@ usage () {
   echo "        curl -sLf https://raw.githubusercontent.com/zhongdai/myconfig/master/install.sh | bash -s -- --uninstall"
 }
 
+check_requirements () {
+  info "Checking Requirements for MyConfig"
+  # check git
+  if hash "git" &>/dev/null; then
+    git_version=$(git --version)
+    success "Check Requirements: ${git_version}"
+  else
+    warn "Check Requirements : git"
+  fi
+  # check zsh
+  if ! command -v zsh >/dev/null 2>&1; then
+    warn "Check Requirements: Zsh"
+  else
+    success "Check Requirements: Zsh"
+  fi
+
+  if hash "tmux" &>/dev/null; then
+    tmux_version=$(tmux -V)
+    success "Check Requirements: ${tmux_version}"
+  else
+    warn "Check Requirements : git"
+  fi
+
+  if hash "vim" &>/dev/null; then
+    is_vim8=$(vim --version | grep "Vi IMproved 8")
+    is_vim74=$(vim --version | grep "Vi IMproved 7.4")
+    if [ -n "$is_vim8" ]; then
+      success "Check Requirements: vim 8.0"
+    elif [ -n "$is_vim74" ]; then
+      success "Check Requirements: vim 7.4"
+    else
+      if hash "nvim" &>/dev/null; then
+        success "Check Requirements: nvim"
+      else
+        warn "Myconfig need vim 7.4 or above"
+      fi
+    fi
+    if hash "nvim" &>/dev/null; then
+      success "Check Requirements: nvim"
+    fi
+  else
+    if hash "nvim" &>/dev/null; then
+      success "Check Requirements: nvim"
+    else
+      warn "Check Requirements : vim or nvim"
+    fi
+  fi
+
+  # check oh my zsh
+  if [[ -d "$HOME/.oh-my-zsh" ]]; then
+    success "Check Requirements: Oh My Zsh"
+  else
+    warn "Check Requirements: Oh My Zsh"
+    info "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)\""
+  fi
+
+  # check vundle 
+  if [[ -d "$HOME/.vim/bundle/Vundle.vim" ]]; then
+    success "Check Requirements: Vundle"
+  else
+    warn "Check Requirements: Vundle"
+    info "git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim"
+  fi
+
+}
+
+fetch_repo () {
+  if [[ -d "$HOME/.myconfig" ]]; then
+    info "Trying to update MyConfig"
+    cd "$HOME/.myconfig"
+    git pull
+    cd - > /dev/null 2>&1
+    success "Successfully update MyConfig"
+  else
+    info "Trying to clone MyConfig"
+    git clone git@github.com:zhongdai/myconfig.git "$HOME/.myconfig"
+    success "Successfully clone MyConfig"
+  fi
+}
 
 main () {
   if [ $# -gt 0 ]
@@ -149,10 +228,13 @@ main () {
         exit 0
         ;;
       --checkRequirements|-c)
+        check_requirements
         exit 0
         ;;
       --install|-i)
         need_cmd 'git'
+        need_cmd 'tmux'
+        fetch_repo
         exit 0
         ;;
       --help|-h)
