@@ -5,6 +5,14 @@ This is my personal config file repo, which includes the tools I need for Mac/Li
 
 ## Installation
 
+Install the config
+
 ```bash
-curl | bash 
+curl -sLf https://raw.githubusercontent.com/zhongdai/myconfig/master/install.sh | bash
+```
+
+Uninstall the config
+
+```bash
+curl -sLf https://raw.githubusercontent.com/zhongdai/myconfig/master/install.sh | bash -s -- --uninstall
 ```
