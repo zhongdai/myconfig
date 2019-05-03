@@ -76,10 +76,12 @@ On_IPurple='\033[0;105m'  # Purple
 On_ICyan='\033[0;106m'    # Cyan
 On_IWhite='\033[0;107m'   # White
 
-# version
+# Version
 Version='0.1'
-#System name
+# System name
 System="$(uname -s)"
+# Today in yyyymmdd
+CurrDate=`date +%Y%m%d`
 
 need_cmd () {
   if ! hash "$1" &>/dev/null; then
@@ -259,9 +261,15 @@ install_fonts () {
   success "font cache done!"
 }
 
+# backup the ~/.vimrc first, and copy the one from repo
 config_vim() {
-  info "Update vim config"
-  success "Successfully Update vim config"
+  if [[ -f "$HOME/.vimrc" ]]; then
+    mv "$HOME/.vimrc" "$HOME/.vimrc.bk"
+    success "Backup $HOME/.vimrc to $HOME/.vimrc.bk"
+  fi
+
+  cp "$HOME/.myconfig/config/_vimrc" "$HOME/.vimrc"
+  success "Successfuly updated .vimrc"
 }
 
 config_vim_snippets() {
@@ -270,8 +278,13 @@ config_vim_snippets() {
 }
 
 config_tmux() {
-  info "Update tmux config"
-  success "Successfully update tmux config"
+  if [[ -f "$HOME/.tmux.conf" ]]; then
+    mv "$HOME/.tmux.conf" "$HOME/.tmux.conf.bk"
+    success "Backup $HOME/.tmux.conf to $HOME/.tmux.conf.bk"
+  fi
+
+  cp "$HOME/.myconfig/config/_tmux.conf" "$HOME/.tmux.conf"
+  success "Successfuly updated .tmux.conf"
 }
 
 config_zsh() {
