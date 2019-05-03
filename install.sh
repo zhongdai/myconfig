@@ -205,6 +205,80 @@ check_requirements () {
 
 }
 
+install_done () {
+  echo_with_color ${Yellow} ""
+  echo_with_color ${Yellow} "Installed Completed for MyConfig ${Version}"
+  echo_with_color ${Yellow} "=============================================================================="
+  echo_with_color ${Yellow} "==    Update the ~/.myconfig/secret/alias.sh for sensitive information      =="
+  echo_with_color ${Yellow} "=============================================================================="
+  echo_with_color ${Yellow} ""
+  echo_with_color ${Yellow} ""
+}
+
+download_font () {
+  url="https://raw.githubusercontent.com/wsdjeg/DotFiles/master/local/share/fonts/$1"
+  path="$HOME/.local/share/fonts/$1"
+  if [[ -f "$path" ]]
+  then
+    success "Downloaded $1"
+  else
+    info "Downloading $1"
+    curl -s -o "$path" "$url"
+    success "Downloaded $1"
+  fi
+}
+
+install_fonts () {
+  if [[ ! -d "$HOME/.local/share/fonts" ]]; then
+    mkdir -p $HOME/.local/share/fonts
+  fi
+  download_font "DejaVu Sans Mono Bold Oblique for Powerline.ttf"
+  download_font "DejaVu Sans Mono Bold for Powerline.ttf"
+  download_font "DejaVu Sans Mono Oblique for Powerline.ttf"
+  download_font "DejaVu Sans Mono for Powerline.ttf"
+  download_font "DroidSansMonoForPowerlinePlusNerdFileTypesMono.otf"
+  download_font "Ubuntu Mono derivative Powerline Nerd Font Complete.ttf"
+  download_font "WEBDINGS.TTF"
+  download_font "WINGDNG2.ttf"
+  download_font "WINGDNG3.ttf"
+  download_font "devicons.ttf"
+  download_font "mtextra.ttf"
+  download_font "symbol.ttf"
+  download_font "wingding.ttf"
+  info "Updating font cache, please wait ..."
+  if [ $System == "Darwin" ];then
+    if [ ! -e "$HOME/Library/Fonts" ];then
+      mkdir "$HOME/Library/Fonts"
+    fi
+    cp $HOME/.local/share/fonts/* $HOME/Library/Fonts/
+  else
+    fc-cache -fv > /dev/null
+    mkfontdir "$HOME/.local/share/fonts" > /dev/null
+    mkfontscale "$HOME/.local/share/fonts" > /dev/null
+  fi
+  success "font cache done!"
+}
+
+config_vim() {
+  info "Update vim config"
+  success "Successfully Update vim config"
+}
+
+config_vim_snippets() {
+  info "Update vim snippets"
+  success "Successfully Update vim snippets"
+}
+
+config_tmux() {
+  info "Update tmux config"
+  success "Successfully update tmux config"
+}
+
+config_zsh() {
+  info "Update zsh config"
+  success "Successfully update zsh config"
+}
+
 fetch_repo () {
   if [[ -d "$HOME/.myconfig" ]]; then
     info "Trying to update MyConfig"
@@ -235,6 +309,12 @@ main () {
         need_cmd 'git'
         need_cmd 'tmux'
         fetch_repo
+        install_fonts
+        config_zsh
+        config_vim
+        config_vim_snippets
+        config_tmux
+        install_done
         exit 0
         ;;
       --help|-h)
@@ -246,7 +326,15 @@ main () {
         exit 0
     esac
   else
-    msg "not selected"
+    need_cmd 'git'
+    need_cmd 'tmux'
+    fetch_repo
+    install_fonts
+    config_zsh
+    config_vim
+    config_vim_snippets
+    config_tmux
+    install_done
   fi
 }
 
