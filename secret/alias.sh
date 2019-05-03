@@ -1,2 +1,2 @@
-awskey='AWS_ACCESS_KEY_ID=sample_aws_key AWS_SECRET_ACCESS_KEY=sample_aws_s_key'
-gcpkey='GOOGLE_APPLICATION_CREDENTIALS=sample.json GOOGLE_APPLICATION_DEFAULT=sample.json'
+alias awskey="AWS_ACCESS_KEY_ID=sample_aws_key AWS_SECRET_ACCESS_KEY=sample_aws_s_key"
+alias gcpkey="GOOGLE_APPLICATION_CREDENTIALS=sample.json GOOGLE_APPLICATION_DEFAULT=sample.json"

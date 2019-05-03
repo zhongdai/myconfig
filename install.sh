@@ -214,6 +214,7 @@ install_done () {
   echo_with_color ${Yellow} "Installed Completed for MyConfig ${Version}"
   echo_with_color ${Yellow} "=============================================================================="
   echo_with_color ${Yellow} "==    Update the ~/.myconfig/secret/alias.sh for sensitive information      =="
+  echo_with_color ${Yellow} "==    Source the .zshrc file to reflect any new custom zsh config           =="
   echo_with_color ${Yellow} "=============================================================================="
   echo_with_color ${Yellow} ""
   echo_with_color ${Yellow} ""
@@ -290,8 +291,7 @@ config_tmux() {
 }
 
 config_zsh() {
-  cp "$HOME/.myconfig/config/myconfig.zsh" "$HOME/.oh-my-zsh/custom"
-  msg "Please source ~/.zshrc to reflect the change"
+  cp "$HOME/.myconfig/config/myconfig.zsh" "$HOME/.oh-my-zsh/custom/"
   success "Successfuly copied zsh custom file"
 }
 
