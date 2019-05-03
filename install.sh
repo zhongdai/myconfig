@@ -275,9 +275,14 @@ config_vim() {
   success "Successfuly updated .vimrc"
 }
 
-config_vim_snippets() {
-  info "Update vim snippets"
-  success "Successfully Update vim snippets"
+config_snippets() {
+  # if on mac, and vs code is installed
+  if [[ $System == "Darwin" ]] && [[ -d "$HOME/Library/Application Support/Code" ]]; then
+    info "VS Code is installed on Mac OS"
+    cp "$HOME/.myconfig/config/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
+    cp "$HOME/.myconfig/config/vscode/sql.json" "$HOME/Library/Application Support/Code/User/snippets/sql.json"
+    success "Successfully copied VS Code settings and user snippets"
+  fi
 }
 
 config_tmux() {
@@ -329,7 +334,7 @@ main () {
         install_fonts
         config_zsh
         config_vim
-        config_vim_snippets
+        config_snippets
         config_tmux
         install_done
         exit 0
@@ -350,7 +355,7 @@ main () {
     install_fonts
     config_zsh
     config_vim
-    config_vim_snippets
+    config_snippets
     config_tmux
     install_done
   fi

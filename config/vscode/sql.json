@@ -1,0 +1,95 @@
+{
+	// Place your snippets for sql here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+
+	"Header comment": {
+		"prefix": "header",
+		"body": [
+			"-- -----------------------------------------------------------------------------------",
+			"-- File Name : $TM_FILENAME",
+			"-- Created Date : $CURRENT_MONTH_NAME_SHORT $CURRENT_YEAR",
+			"-- Owner : Zhong Dai <zhdai@woolworths.com.au>",
+			"-- Purpose : ${1}", 
+			"-- ",
+			"-- Change Log",
+			"-- $CURRENT_MONTH_NAME_SHORT $CURRENT_YEAR init it  (Zhong Dai)",
+			"-- -----------------------------------------------------------------------------------",
+			"${0}"
+		],
+		"description": "print the header"
+	},
+	"Logger Header": {
+		"prefix": "logheader",
+		"body": [
+			"SELECT 'Step: $TM_FILENAME';",
+			"SELECT 'Ref_dt = {{ ref_dt }}';",
+			"SELECT 'reset_run = {{ reset_run }}';",
+			"SELECT 'debug = {{ debug }}';",
+			"SELECT 'temp database = temp_{{ ref_dt | replace('-','') }}';",
+			"USE `temp_{{ ref_dt | replace('-','')}}`;",
+			"${0}"
+		],
+		"description": "print the logging information for all sql step"
+	},
+	"Create table header": {
+		"prefix": "tbheader",
+		"body":[
+			"SELECT 'create table ${TM_FILENAME/(cmd_b\\d+_).+$/$1/}${1}';",
+			"{% if reset_run %}",
+			"DROP TABLE IF EXISTS ${TM_FILENAME/(cmd_b\\d+_).+$/$1/}${1};",
+			"CREATE TABLE ${TM_FILENAME/(cmd_b\\d+_).+$/$1/}${1}",
+			"{% else %}",
+			"CREATE TABLE IF NOT EXISTS ${TM_FILENAME/(cmd_b\\d+_).+$/$1/}${1}",
+			"{% endif %}",
+			"USING PARQUET",
+			"AS",
+			"${0}"
+		],
+		"description": "Added the header for each temp table creation"
+	},
+	"Final output table": {
+		"prefix": "cmdtable",
+		"body":[
+			"{% if first_run %}",
+			"SELECT 'Drop and Re-Create Table cmd.cmd_${TM_FILENAME_BASE/cmd_b\\d+_(\\d+.+$)/$1/}';",
+			"DROP TABLE IF EXISTS cmd.cmd_${TM_FILENAME_BASE/cmd_b\\d+_(\\d+.+$)/$1/};",
+			"CREATE TABLE cmd.cmd_${TM_FILENAME_BASE/cmd_b\\d+_(\\d+.+$)/$1/}",
+			"USING PARQUET",
+			"PARTITIONED BY (ref_dt)",
+			"AS",
+			"{% else %}",
+			"SELECT 'Insert red_dt = {{ ref_dt }} to existing cmd.cmd_${TM_FILENAME_BASE/cmd_b\\d+_(\\d+.+$)/$1/}';",
+			"INSERT OVERWRITE TABLE cmd.cmd_${TM_FILENAME_BASE/cmd_b\\d+_(\\d+.+$)/$1/} PARTITION (ref_dt = '{{ ref_dt }}')",
+			"{% endif %}",
+			"    SELECT",
+			"    base.crn",
+			"    {% if first_run %}",
+			",   CAST('{{ ref_dt }}' AS DATE) AS ref_dt",
+			"    {% endif %}",
+			"-- you logic put here",
+			"${0}",
+			"FROM base_crn base",
+			"LEFT JOIN sample_temp_table t1",
+			"ON base.crn = t1.crn",
+			";",
+			"-- debug statement --",
+			"{% if debug %}",
+			"SELECT 'Count for table : cmd.cmd_${TM_FILENAME_BASE/cmd_b\\d+_(\\d+.+$)/$1/}';",
+			"SELECT ref_dt, Count(1) FROM cmd.cmd_${TM_FILENAME_BASE/cmd_b\\d+_(\\d+.+$)/$1/} GROUP BY ref_dt;",
+			"{% endif %}"
+		],
+		"description": "The final output cmd tables header"
+	}
+
+}
