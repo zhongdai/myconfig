@@ -15,6 +15,3 @@ fi
 
 # Source utils
 source $HOME/.myconfig/utils/m.sh
-
-# Source the alias
-source $HOME/.myconfig/secret/alias.sh
