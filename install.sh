@@ -194,8 +194,6 @@ check_requirements () {
     success "Check Requirements: Oh My Zsh"
   else
     warn "Check Requirements: Oh My Zsh"
-    info "Install oh-my-zsh"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
   fi
 
   # check vundle 
@@ -203,8 +201,6 @@ check_requirements () {
     success "Check Requirements: Vundle"
   else
     warn "Check Requirements: Vundle"
-    info "Install Vundle"
-    git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
   fi
 
 }
@@ -212,8 +208,8 @@ check_requirements () {
 install_done () {
   echo_with_color ${Yellow} ""
   echo_with_color ${Yellow} "Installed Completed for MyConfig ${Version}"
+  echo_with_color ${Yellow} "Contact to Zhongdai.au[at]gmail.com for any problems."
   echo_with_color ${Yellow} "=============================================================================="
-  echo_with_color ${Yellow} "==    Update the ~/.myconfig/secret/alias.sh for sensitive information      =="
   echo_with_color ${Yellow} "==    Source the .zshrc file to reflect any new custom zsh config           =="
   echo_with_color ${Yellow} "=============================================================================="
   echo_with_color ${Yellow} ""
@@ -262,6 +258,17 @@ install_fonts () {
     mkfontscale "$HOME/.local/share/fonts" > /dev/null
   fi
   success "font cache done!"
+}
+
+
+install_vsc_ext () {
+  local vsplugins=(wayou.vscode-todo-highlight vscodevim.vim redhat.vscode-yaml)
+  vsplugins+=(ms-python.python)
+  vsplugins+=(donjayamanne.githistory)
+  for pluginid in "${vsplugins[@]}"; do
+    code --install-extension ${pluginid}
+  done
+  success "Successfully installed VS Code extension"
 }
 
 # backup the ~/.vimrc first, and copy the one from repo
@@ -324,6 +331,11 @@ main () {
         ;;
       --checkRequirements|-c)
         check_requirements
+        exit 0
+        ;;
+      --vscode)
+        need_cmd 'code'
+        install_vsc_ext
         exit 0
         ;;
       --install|-i)
