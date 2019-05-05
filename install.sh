@@ -276,6 +276,9 @@ config_vim() {
   if [[ -f "$HOME/.vimrc" ]]; then
     mv "$HOME/.vimrc" "$HOME/.vimrc.bk"
     success "Backup $HOME/.vimrc to $HOME/.vimrc.bk"
+
+    mkdir -p /tmp/vim
+    success "The vim tmp/log/swap files are in /tmp/vim"
   fi
 
   cp "$HOME/.myconfig/config/_vimrc" "$HOME/.vimrc"
@@ -303,8 +306,14 @@ config_tmux() {
 }
 
 config_zsh() {
-  cp "$HOME/.myconfig/config/myconfig.zsh" "$HOME/.oh-my-zsh/custom/"
-  success "Successfuly copied zsh custom file"
+  if [[ -z "$ZSH_CUSTOM" ]]; then
+      target_custom_folder="$ZSH_CUSTOM"
+  else
+      target_custom_folder="$HOME/.oh-my-zsh/custom/"
+  fi
+  msg "The target ZSH custom folder is $target_custom_folder"
+  cp "$HOME/.myconfig/config/myconfig.zsh" "$target_custom_folder"
+  success "Successfuly copied zsh custom file to $target_custom_folder"
 }
 
 fetch_repo () {

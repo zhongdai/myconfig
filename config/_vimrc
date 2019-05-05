@@ -73,9 +73,10 @@ colorscheme molokai
 set guifont=Inconsolata\ Regular:h14
 
 
-set backupdir=~/proj/temp//
-set directory=~/proj/temp//
-set undodir=~/proj/temp//
+" I don't really need those temp files
+set backupdir=/tmp/vim//
+set directory=/tmp/vim//
+set undodir=/tmp/vim//
 
 
 " nerdtree related
