@@ -306,12 +306,12 @@ config_tmux() {
 }
 
 config_zsh() {
-  if [[ -z "$ZSH_CUSTOM" ]]; then
+  if [[ -n "$ZSH_CUSTOM" ]]; then
       target_custom_folder="$ZSH_CUSTOM"
   else
       target_custom_folder="$HOME/.oh-my-zsh/custom/"
   fi
-  msg "The target ZSH custom folder is $target_custom_folder"
+  info "The target ZSH custom folder is $target_custom_folder"
   cp "$HOME/.myconfig/config/myconfig.zsh" "$target_custom_folder"
   success "Successfuly copied zsh custom file to $target_custom_folder"
 }

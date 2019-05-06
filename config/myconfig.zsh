@@ -7,9 +7,13 @@ export UPDATE_ZSH_DAYS=30
 ### Alias ###
 alias zshconfig="vi $HOME/.zshrc"
 alias ohmyzsh="vi $HOME/.oh-my-zsh"
+alias sourceit="source $HOME/.zshrc"
+
+
+alias updatecfg="curl -sLf https://raw.githubusercontent.com/zhongdai/myconfig/master/install.sh | bash"
 
 
 ### Source ###
 
-# The entry of myconfig
-source $HOME/.myconfig/init.sh
+# load separate modules from the utils folder
+source $HOME/.myconfig/utils/m.sh
