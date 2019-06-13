@@ -32,7 +32,7 @@ Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 "
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-
+Plugin 'mileszs/ack.vim'
 Plugin 'flazz/vim-colorschemes'
 
 " snippets 
@@ -72,12 +72,10 @@ set colorcolumn=80
 colorscheme molokai
 set guifont=Inconsolata\ Regular:h14
 
-
-" I don't really need those temp files
-set backupdir=/tmp/vim//
-set directory=/tmp/vim//
-set undodir=/tmp/vim//
-
+" use ag - better performance
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
 
 " nerdtree related
 autocmd StdinReadPre * let s:std_in=1
