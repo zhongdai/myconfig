@@ -77,7 +77,7 @@ On_ICyan='\033[0;106m'    # Cyan
 On_IWhite='\033[0;107m'   # White
 
 # Version
-Version='0.1'
+Version='0.2'
 # System name
 System="$(uname -s)"
 # Today in yyyymmdd
@@ -125,10 +125,10 @@ usage () {
   echo ""
   echo "OPTIONS"
   echo ""
-  echo " -i, --install            install spacevim for vim or neovim"
+  echo " -i, --install            Install MyConfig"
   echo " -v, --version            Show version information and exit"
-  echo " -u, --uninstall          Uninstall SpaceVim"
-  echo " -c, --checkRequirements  checkRequirements for SpaceVim"
+  echo " -u, --uninstall          Uninstall MyConfig"
+  echo " -c, --checkRequirements  checkRequirements for MyConfig"
   echo ""
   echo "EXAMPLE"
   echo ""
@@ -164,31 +164,6 @@ check_requirements () {
     warn "Check Requirements : git"
   fi
 
-  if hash "vim" &>/dev/null; then
-    is_vim8=$(vim --version | grep "Vi IMproved 8")
-    is_vim74=$(vim --version | grep "Vi IMproved 7.4")
-    if [ -n "$is_vim8" ]; then
-      success "Check Requirements: vim 8.0"
-    elif [ -n "$is_vim74" ]; then
-      success "Check Requirements: vim 7.4"
-    else
-      if hash "nvim" &>/dev/null; then
-        success "Check Requirements: nvim"
-      else
-        warn "Myconfig need vim 7.4 or above"
-      fi
-    fi
-    if hash "nvim" &>/dev/null; then
-      success "Check Requirements: nvim"
-    fi
-  else
-    if hash "nvim" &>/dev/null; then
-      success "Check Requirements: nvim"
-    else
-      warn "Check Requirements : vim or nvim"
-    fi
-  fi
-
   # check oh my zsh
   if [[ -d "$HOME/.oh-my-zsh" ]]; then
     success "Check Requirements: Oh My Zsh"
@@ -196,13 +171,23 @@ check_requirements () {
     warn "Check Requirements: Oh My Zsh"
   fi
 
-  # check vundle 
-  if [[ -d "$HOME/.vim/bundle/Vundle.vim" ]]; then
-    success "Check Requirements: Vundle"
+  if hash "kubectl" &>/dev/null; then
+    success "Check Requirements: kubectl"
   else
-    warn "Check Requirements: Vundle"
+    warn "Check Requirements : kubectl"
   fi
 
+  if hash "kubectx" &>/dev/null; then
+    success "Check Requirements: kubectx"
+  else
+    warn "Check Requirements : kubectx"
+  fi
+
+  if hash "k9s" &>/dev/null; then
+    success "Check Requirements: k9s"
+  else
+    warn "Check Requirements : k9s"
+  fi
 }
 
 install_done () {
@@ -260,41 +245,6 @@ install_fonts () {
   success "font cache done!"
 }
 
-
-install_vsc_ext () {
-  local vsplugins=(wayou.vscode-todo-highlight vscodevim.vim redhat.vscode-yaml)
-  vsplugins+=(ms-python.python)
-  vsplugins+=(donjayamanne.githistory)
-  for pluginid in "${vsplugins[@]}"; do
-    code --install-extension ${pluginid}
-  done
-  success "Successfully installed VS Code extension"
-}
-
-# backup the ~/.vimrc first, and copy the one from repo
-config_vim() {
-  if [[ -f "$HOME/.vimrc" ]]; then
-    mv "$HOME/.vimrc" "$HOME/.vimrc.bk"
-    success "Backup $HOME/.vimrc to $HOME/.vimrc.bk"
-
-    mkdir -p /tmp/vim
-    success "The vim tmp/log/swap files are in /tmp/vim"
-  fi
-
-  cp "$HOME/.myconfig/config/_vimrc" "$HOME/.vimrc"
-  success "Successfuly updated .vimrc"
-}
-
-config_snippets() {
-  # if on mac, and vs code is installed
-  if [[ $System == "Darwin" ]] && [[ -d "$HOME/Library/Application Support/Code" ]]; then
-    info "VS Code is installed on Mac OS"
-    cp "$HOME/.myconfig/config/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
-    cp "$HOME/.myconfig/config/vscode/sql.json" "$HOME/Library/Application Support/Code/User/snippets/sql.json"
-    success "Successfully copied VS Code settings and user snippets"
-  fi
-}
-
 config_tmux() {
   if [[ -f "$HOME/.tmux.conf" ]]; then
     mv "$HOME/.tmux.conf" "$HOME/.tmux.conf.bk"
@@ -342,11 +292,6 @@ main () {
         check_requirements
         exit 0
         ;;
-      --vscode)
-        need_cmd 'code'
-        install_vsc_ext
-        exit 0
-        ;;
       --install|-i)
         need_cmd 'git'
         need_cmd 'tmux'
@@ -354,8 +299,6 @@ main () {
         fetch_repo
         install_fonts
         config_zsh
-        config_vim
-        config_snippets
         config_tmux
         install_done
         exit 0
@@ -375,8 +318,6 @@ main () {
     fetch_repo
     install_fonts
     config_zsh
-    config_vim
-    config_snippets
     config_tmux
     install_done
   fi
